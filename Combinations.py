@@ -549,16 +549,18 @@ from math import comb
 def is_feasible_given_elements(p, l, total_available_elements):
     required = p  # Start with primary elements
     current = p
+    level_count = [p] 
 
     for _ in range(l):
         if current < 2:
             return False, required
         current = comb(current, 2)
         required += current
+        level_count.append(required)
         if required > total_available_elements:
             return False, required
 
-    return True, required
+    return True, level_count
     
 
 def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=None):
@@ -685,7 +687,7 @@ st.markdown("### 🧪 Feasibility Check")
 if feasible:
     st.success("✅ The selected number of elements and levels is feasible.")
 else:
-    st.error("❌ Not enough elements to support this many levels.")
+    st.error(f"❌ Not enough elements to support this many levels., requires {level_counts}")
 
 # Show level breakdown
 for i, count in enumerate(level_counts):
