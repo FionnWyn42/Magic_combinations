@@ -651,7 +651,7 @@ else:
 p = st.number_input("Number of base elements (p)", min_value=2, max_value=20, value=4)
 l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=2)
 use_seed = st.checkbox("Use Seed?")
-seed_val = st.number_input("Seed", min_value=0, value=42, step=1) if use_seed else None
+seed_val = st.number_input("Seed", min_value=0, value=42, step=1) if use_seed else np.random.randint(0, 10**7)
 
 if st.button("Generate Graph"):
     try:
