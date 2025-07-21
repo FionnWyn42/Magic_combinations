@@ -633,7 +633,7 @@ if st.button("Generate Graph"):
     try:
         generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=seed_val)
         if not use_seed:
-            st.info("Random seed used (not shown since unchecked).")
+            st.info(f"Random Seed used: `{seed_val}`")
         else:
             st.success(f"Seed used: `{seed_val}`")
     except Exception as e:
