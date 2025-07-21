@@ -1,0 +1,112 @@
+import streamlit as st
+import numpy as np
+import networkx as nx
+import math
+from itertools import combinations
+from pyvis.network import Network
+import tempfile
+
+# Default element colors (can be extended)
+default_element_colors = {
+    "Fire": "red",
+    "Water": "blue",
+    "Earth": "saddlebrown",
+    "Air": "skyblue",
+    "Light": "gold",
+    "Dark": "gray",
+    "Metal": "silver",
+    "Crystal": "cyan"
+}
+
+
+def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, seed=None):
+    if seed is not None:
+        np.random.seed(seed)
+
+    pos_elms = list(pos_elms_colors.keys())
+    N = p
+    n = p
+    levels = [0]
+
+    for _ in range(l):
+        new_v = math.comb(n, 2)
+        levels.append(N)
+        N += new_v
+        n = new_v
+
+    levels.append(N)
+    elms = np.random.choice(pos_elms, N, replace=False)
+    elms_split = [elms[levels[j]: levels[j + 1]] for j in range(l + 1)]
+
+    edges = []
+    for ind in range(l):
+        elm_combs = list(combinations(elms_split[ind], 2))
+        elms_res = elms_split[ind + 1]
+        for k, el in enumerate(elm_combs):
+            edges.append([el[0], elms_res[k]])
+            edges.append([el[1], elms_res[k]])
+
+    G = nx.DiGraph()
+    G.add_edges_from(edges)
+
+    net = Network(height="600px", directed=True)
+    net.from_nx(G)
+
+    for n in net.nodes:
+        n['color'] = pos_elms_colors.get(n['label'], 'lightgray')
+        n['border'] = 'black'
+
+    for e in net.edges:
+        e['color'] = pos_elms_colors.get(e['from'], 'gray')
+
+    return net
+
+
+# --- Streamlit App Interface ---
+st.set_page_config("Elemental Combination Generator", layout="centered")
+st.title("🧪 Elemental Combination Graph")
+
+method = st.radio("Choose how to define elements:", ["Random", "Custom Input"])
+
+if method == "Custom Input":
+    element_input = st.text_input("Enter elements (comma-separated)", "Fire,Water,Earth,Air")
+    color_input = st.text_input("Enter colors (comma-separated, or leave blank for random)", "")
+
+    elements = [e.strip().title() for e in element_input.split(",")]
+
+    if color_input.strip() == "":
+        available_colors = list(default_element_colors.values())
+        colors = np.random.choice(available_colors, size=len(elements), replace=False)
+    else:
+        colors = [c.strip().lower() for c in color_input.split(",")]
+
+    if len(elements) != len(colors):
+        st.error("Please ensure the number of elements matches the number of colors.")
+        st.stop()
+
+    element_colors = dict(zip(elements, colors))
+    p = len(elements)
+
+else:
+    element_colors = default_element_colors
+    p = st.number_input("Number of base elements (p)", min_value=2, max_value=len(default_element_colors), value=4)
+
+l = st.number_input("Number of levels (l)", min_value=1, value=2)
+
+use_seed = st.checkbox("Use random seed")
+seed_val = st.number_input("Seed value", min_value=0, value=42) if use_seed else None
+
+if st.button("Generate Graph"):
+    try:
+        net = generate_elemental_combinations_pyvis(element_colors, p, l, seed=seed_val)
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as f:
+            net.show(f.name)
+            html = open(f.name, 'r', encoding='utf-8').read()
+            st.components.v1.html(html, height=650, scrolling=True)
+
+        if seed_val is not None:
+            st.success(f"Seed used: `{seed_val}`")
+            st.code(f"{seed_val}", language="python")
+    except Exception as e:
+        st.error(f"Error generating graph: {e}")
