@@ -555,6 +555,8 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
     n = p
     levels = [0]
 
+    combination_sources = {}  # New dict
+
     for q in range(l):
         new_v = math.comb(n, 2)
         levels.append(N)
@@ -581,8 +583,8 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
         for k, el in enumerate(elm_combs):
             edges.append([el[0], elms_res[k]])
             edges.append([el[1], elms_res[k]])
-            combinations_text.append(f"{el[0]} + {el[1]} = {elms_res[k]} : Level {ind + 1}")
-
+            combinations_text.append(f"{el[0]} + {el[1]} = {elms_res[k]} : Level {ind + 1}"
+            combination_sources[result] = f"{el[0]} + {el[1]}"
     G = nx.DiGraph()
     G.add_edges_from(edges)
 
@@ -598,7 +600,9 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
         ecolour = pos_elms_colors.get(e['from'], 'gray')
         e['color'] = ecolour
 
-    combination_sources = {}  # New dict
+    
+    
+    
     for n in net.nodes:
         label = n['label']
     
@@ -612,10 +616,7 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
         n['color'] = pos_elms_colors[label]
         n['border'] = 'black'
     
-    # Inside your loop that combines elements:
-    for k, el in enumerate(elm_combs):
-        result = elms_res[k]
-        combination_sources[result] = f"{el[0]} + {el[1]}"
+
 
 
 
