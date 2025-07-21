@@ -598,6 +598,27 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
         ecolour = pos_elms_colors.get(e['from'], 'gray')
         e['color'] = ecolour
 
+    combination_sources = {}  # New dict
+    for n in net.nodes:
+        label = n['label']
+    
+        # Look up or define combination info
+        combo_info = combination_sources.get(label, "")
+    
+        # Set tooltip title with the combination info
+        n['title'] = f"{label}\n{combo_info}"
+
+        # Optional: set color and outline
+        n['color'] = pos_elms_colors[label]
+        n['border'] = 'black'
+    
+    # Inside your loop that combines elements:
+    for k, el in enumerate(elm_combs):
+        result = elms_res[k]
+        combination_sources[result] = f"{el[0]} + {el[1]}"
+
+
+
     # Display Pyvis in Streamlit
     with tempfile.NamedTemporaryFile('w', delete=False, suffix='.html') as f:
         net.save_graph(f.name)
