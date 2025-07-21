@@ -605,6 +605,8 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
 # Streamlit UI
 st.set_page_config(page_title="Elemental Combination Generator", layout="centered")
 st.title("🧪 Elemental Combination Graph Generator")
+set_choice = st.selectbox("Choose an element set", list(element_sets.keys()))
+element_colors = element_sets[set_choice]
 
 input_type = st.radio("Choose input method:", ["Random Elements", "Custom Elements"])
 
