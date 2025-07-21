@@ -546,14 +546,19 @@ import tempfile
 # Predefined elements and colors
 from math import comb
 
-def is_feasible(n, levels):
-    counts = [n]
-    for i in range(levels):
-        if counts[-1] < 2:
-            return False, counts
-        next_count = comb(counts[-1], 2)
-        counts.append(next_count)
-    return True, counts
+def is_feasible_given_elements(p, l, total_available_elements):
+    required = p  # Start with primary elements
+    current = p
+
+    for _ in range(l):
+        if current < 2:
+            return False, required
+        current = comb(current, 2)
+        required += current
+        if required > total_available_elements:
+            return False, required
+
+    return True, required
     
 
 def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=None):
@@ -646,24 +651,34 @@ input_type = st.radio("Choose input method:", ["Random Elements", "Custom Elemen
 
 if input_type == "Random Elements":
     pos_elms_colors = element_colors.copy()
+    totalelm = 100
 else:
     custom_elements_str = st.text_input("Enter custom elements (comma-separated)", "Fire,Water,Earth,Air")
-    custom_colors_str = st.text_input("Enter corresponding colors (comma-separated)", "red,blue,brown,skyblue")
+    custom_colors_str = st.text_input("Enter corresponding colors (comma-separated), leave blank if random", "red,blue,brown,skyblue")
     
     
     custom_elements = [e.strip().title() for e in custom_elements_str.split(",")]
     custom_colors = [c.strip().lower() for c in custom_colors_str.split(",")]
+    totalelm = len(custom_elements)
 
-    if len(custom_elements) != len(custom_colors):
+    customer_cols_new = []
+    if len(custom_colours) < 1:
+        all_colours = list(physical_elements.values())
+        for i in range(totalelm):
+            customer_cols_new.append(np.random.choic
+    
+    elif len(custom_elements) != len(custom_colors):
         st.error("Element and color counts must match.")
         st.stop()
+
+    
 
     pos_elms_colors = dict(zip(custom_elements, custom_colors))
 
 p = st.number_input("Number of base elements (p)", min_value=2, max_value=20, value=4)
 l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=2)
 
-feasible, level_counts = is_feasible(p, l)
+feasible, level_counts = is_feasible_given_elements(p, l, totalelm)
 
 st.markdown("### 🧪 Feasibility Check")
 
