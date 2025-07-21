@@ -665,8 +665,8 @@ else:
     if len(custom_colours) < 1:
         all_colours = list(physical_elements.values())
         for i in range(totalelm):
-            customer_cols_new.append(np.random.choic
-    
+            customer_cols_new.append(np.random.choice(all_colours, replace=False))
+        custom_colors = customer_cols_new
     elif len(custom_elements) != len(custom_colors):
         st.error("Element and color counts must match.")
         st.stop()
