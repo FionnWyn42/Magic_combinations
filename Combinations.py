@@ -114,7 +114,7 @@ import tempfile
 # Predefined elements and colors
 
 
-def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, seed=None):
+def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=None):
     if seed is not None:
         np.random.seed(seed)
 
@@ -130,7 +130,10 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, seed=None):
         n = new_v
 
     levels.append(N)
-    elms = np.random.choice(pos_elms, N, replace=False)
+    if input_type == 'Random Elements':
+        elms = np.random.choice(pos_elms, N, replace=False)
+    else:
+        elms = pos_elms
     elms_split = []
 
     for j in range(l + 1):
@@ -194,7 +197,7 @@ seed_val = st.number_input("Seed", min_value=0, value=42, step=1) if use_seed el
 
 if st.button("Generate Graph"):
     try:
-        generate_elemental_combinations_pyvis(pos_elms_colors, p, l, seed=seed_val)
+        generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=seed_val)
         if not use_seed:
             st.info("Random seed used (not shown since unchecked).")
         else:
