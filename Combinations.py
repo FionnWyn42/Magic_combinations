@@ -682,7 +682,7 @@ l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=1)
 
 feasible, level_counts = is_feasible_given_elements(p, l, totalelm)
 
-st.markdown("### 🧪 Feasibility Check")
+st.markdown("### Feasibility Check")
 
 if feasible:
     st.success("✅ The selected number of elements and levels is feasible.")
