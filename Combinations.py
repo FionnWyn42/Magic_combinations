@@ -584,7 +584,7 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
             edges.append([el[0], elms_res[k]])
             edges.append([el[1], elms_res[k]])
             combinations_text.append(f"{el[0]} + {el[1]} = {elms_res[k]} : Level {ind + 1}")
-            combination_sources[result] = f"{el[0]} + {el[1]}"
+            combination_sources[elms_res[k]] = f"{el[0]} + {el[1]}"
     G = nx.DiGraph()
     G.add_edges_from(edges)
 
