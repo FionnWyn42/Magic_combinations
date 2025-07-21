@@ -544,7 +544,17 @@ from streamlit.components.v1 import html
 import tempfile
 
 # Predefined elements and colors
+from math import comb
 
+def is_feasible(n, levels):
+    counts = [n]
+    for i in range(levels):
+        if counts[-1] < 2:
+            return False, counts
+        next_count = comb(counts[-1], 2)
+        counts.append(next_count)
+    return True, counts
+    
 
 def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=None):
     if seed is not None:
@@ -639,6 +649,8 @@ if input_type == "Random Elements":
 else:
     custom_elements_str = st.text_input("Enter custom elements (comma-separated)", "Fire,Water,Earth,Air")
     custom_colors_str = st.text_input("Enter corresponding colors (comma-separated)", "red,blue,brown,skyblue")
+    
+    
     custom_elements = [e.strip().title() for e in custom_elements_str.split(",")]
     custom_colors = [c.strip().lower() for c in custom_colors_str.split(",")]
 
@@ -650,6 +662,21 @@ else:
 
 p = st.number_input("Number of base elements (p)", min_value=2, max_value=20, value=4)
 l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=2)
+
+feasible, level_counts = is_feasible(p, l)
+
+st.markdown("### 🧪 Feasibility Check")
+
+if feasible:
+    st.success("✅ The selected number of elements and levels is feasible.")
+else:
+    st.error("❌ Not enough elements to support this many levels.")
+
+# Show level breakdown
+for i, count in enumerate(level_counts):
+    st.write(f"Level {i}: {count} elements")
+    
+
 use_seed = st.checkbox("Use Seed?")
 seed_val = st.number_input("Seed", min_value=0, value=42, step=1) if use_seed else np.random.randint(0, 10**7)
 
