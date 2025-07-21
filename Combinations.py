@@ -1,4 +1,4 @@
-physical_elements = {
+jphysical_elements = {
     "Fire": "red",
     "Water": "blue",
     "Earth": "saddlebrown",
@@ -655,7 +655,7 @@ if input_type == "Random Elements":
     pos_elms_colors = element_colors.copy()
     totalelm = 100
 else:
-    custom_elements_str = st.text_input("Enter custom elements (comma-separated)", "Fire,Water,Earth,Air")
+    custom_elements_str = st.text_input("Enter custom elements (comma-separated)", "Fire,Water,Earth,Air, Psychedelic, Death, Plasma, Grime, Bubble, Sneeze")
     custom_colors_str = st.text_input("Enter corresponding colors (comma-separated), put random if you want arbitsry colours", "random")
     
     
@@ -678,7 +678,7 @@ else:
     pos_elms_colors = dict(zip(custom_elements, custom_colors))
 
 p = st.number_input("Number of base elements (p)", min_value=2, max_value=20, value=4)
-l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=2)
+l = st.number_input("Number of levels (l)", min_value=1, max_value=5, value=1)
 
 feasible, level_counts = is_feasible_given_elements(p, l, totalelm)
 
