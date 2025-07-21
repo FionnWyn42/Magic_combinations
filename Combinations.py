@@ -656,7 +656,7 @@ if input_type == "Random Elements":
     totalelm = 100
 else:
     custom_elements_str = st.text_input("Enter custom elements (comma-separated)", "Fire,Water,Earth,Air")
-    custom_colors_str = st.text_input("Enter corresponding colors (comma-separated), leave blank if random", "red,blue,brown,skyblue")
+    custom_colors_str = st.text_input("Enter corresponding colors (comma-separated), put random if you want arbitsry colours", "random")
     
     
     custom_elements = [e.strip().title() for e in custom_elements_str.split(",")]
@@ -664,7 +664,7 @@ else:
     totalelm = len(custom_elements)
 
     customer_cols_new = []
-    if len(custom_colors) < 1:
+    if  custom_colors_str.lower().strip() == 'random':
         all_colours = list(physical_elements.values())
         for i in range(totalelm):
             customer_cols_new.append(np.random.choice(all_colours, replace=False))
