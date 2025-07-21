@@ -640,4 +640,6 @@ if st.button("Generate Graph"):
             st.success(f"Seed used: `{seed_val}`")
     except Exception as e:
         st.error(f"❌ Error generating graph: {e}")
-        
+st.markdown("### Elemental Combinations")
+for line in combinations_text:
+    st.markdown(f"- {line}")      
