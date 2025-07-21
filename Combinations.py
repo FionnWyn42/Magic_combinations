@@ -662,7 +662,7 @@ else:
     totalelm = len(custom_elements)
 
     customer_cols_new = []
-    if len(custom_colours) < 1:
+    if len(custom_colors) < 1:
         all_colours = list(physical_elements.values())
         for i in range(totalelm):
             customer_cols_new.append(np.random.choice(all_colours, replace=False))
