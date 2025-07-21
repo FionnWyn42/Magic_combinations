@@ -603,7 +603,7 @@ def generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, see
         net.save_graph(f.name)
         html_content = open(f.name, 'r', encoding='utf-8').read()
     html(html_content, height=700, scrolling=True)
-
+    return combinations_text
 # Streamlit UI
 st.set_page_config(page_title="Elemental Combination Generator", layout="centered")
 st.title("🧪 Elemental Combination Graph Generator")
@@ -633,13 +633,17 @@ seed_val = st.number_input("Seed", min_value=0, value=42, step=1) if use_seed el
 
 if st.button("Generate Graph"):
     try:
-        generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=seed_val)
+        combinations_text = generate_elemental_combinations_pyvis(pos_elms_colors, p, l, input_type, seed=seed_val)
+        st.markdown("### Elemental Combinations")
+        
         if not use_seed:
             st.info(f"Random Seed used: `{seed_val}`")
         else:
             st.success(f"Seed used: `{seed_val}`")
+        
+        for line in combinations_text:
+            st.markdown(f"- {line}")
+            
     except Exception as e:
         st.error(f"❌ Error generating graph: {e}")
-st.markdown("### Elemental Combinations")
-for line in combinations_text:
-    st.markdown(f"- {line}")      
+      
