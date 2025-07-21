@@ -1,4 +1,4 @@
-jphysical_elements = {
+physical_elements = {
     "Fire": "red",
     "Water": "blue",
     "Earth": "saddlebrown",
